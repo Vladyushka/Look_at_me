@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Смотри на страницу ид*от!</title>
+    <title>Смотри на страницу иди*т!</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <style>
         body {
             margin: 0;
+            padding: 0;
             height: 100vh;
             display: flex;
             justify-content: center;
@@ -13,29 +14,35 @@
             background: #000;
             overflow: hidden;
             font-family: 'Arial Black', sans-serif;
+            -webkit-text-size-adjust: 100%;
+            touch-action: manipulation;
         }
 
         .container {
             position: relative;
             text-align: center;
-            max-width: 90vw;
+            width: 90vw;
+            max-width: 800px;
             z-index: 1;
         }
 
         .text {
             color: #ff0000;
-            font-size: 6vw;
+            font-size: 12vw;
             text-transform: uppercase;
-            text-shadow: 0 0 30px #ff0000;
+            text-shadow: 0 0 10px #ff0000;
             white-space: nowrap;
-            letter-spacing: -2px;
             position: relative;
             z-index: 3;
+            margin: 0;
+            padding: 0;
+            line-height: 1;
         }
 
-        @media (min-width: 1200px) {
+        @media (min-width: 768px) {
             .text {
                 font-size: 80px;
+                text-shadow: 0 0 30px #ff0000;
             }
         }
 
@@ -61,7 +68,7 @@
 
         @keyframes letterBounce {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-30px); }
+            50% { transform: translateY(-20px); }
         }
 
         .overlay {
@@ -80,13 +87,13 @@
 
         .blast {
             position: absolute;
-            width: 300%;
-            height: 600%;
+            width: 200%;
+            height: 400%;
             background: radial-gradient(circle, 
                 rgba(255,100,100,0.8) 0%, 
                 rgba(255,50,50,0.5) 40%, 
                 rgba(255,0,0,0) 80%);
-            animation: blast 1.2s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+            animation: blast 1s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
             pointer-events: none;
             z-index: 1;
             left: 50%;
@@ -104,7 +111,7 @@
                 opacity: 0.9;
             }
             100% {
-                transform: translate(-50%, -50%) scale(3);
+                transform: translate(-50%, -50%) scale(2);
                 opacity: 0;
             }
         }
@@ -120,10 +127,10 @@
         .particle {
             position: absolute;
             background: radial-gradient(circle, #ff5555 20%, rgba(255,0,0,0) 80%);
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
-            animation: particleFly 1.2s ease-out forwards;
+            animation: particleFly 1s ease-out forwards;
             left: 50%;
             top: 50%;
         }
@@ -141,10 +148,10 @@
 
         .glow {
             position: fixed;
-            width: 200px;
-            height: 200px;
+            width: 150px;
+            height: 150px;
             background: radial-gradient(circle, 
-                rgba(255,0,0,0.4) 0%, 
+                rgba(255,0,0,0.3) 0%, 
                 rgba(0,0,0,0) 70%);
             animation: pulse 2s infinite;
             pointer-events: none;
@@ -153,7 +160,7 @@
 
         @keyframes pulse {
             0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 0.6; transform: scale(1.2); }
+            50% { opacity: 0.5; transform: scale(1.1); }
         }
 
         .shockwave {
@@ -162,9 +169,9 @@
             height: 100%;
             border-radius: 50%;
             background: radial-gradient(circle, 
-                rgba(255,255,255,0.8) 0%, 
+                rgba(255,255,255,0.6) 0%, 
                 rgba(255,100,100,0) 70%);
-            animation: shockwave 1s linear forwards;
+            animation: shockwave 0.8s linear forwards;
             z-index: 5;
             pointer-events: none;
         }
@@ -175,7 +182,7 @@
                 opacity: 1;
             }
             100% {
-                transform: scale(5);
+                transform: scale(3);
                 opacity: 0;
             }
         }
@@ -206,10 +213,25 @@
         // Адаптивный размер текста
         function adjustText() {
             const textElement = document.querySelector('.text');
-            const container = document.querySelector('.container');
+            const containerElement = document.querySelector('.container');
+            const viewportWidth = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
             
-            while(textElement.offsetWidth > container.offsetWidth) {
-                textElement.style.fontSize = `${parseFloat(getComputedStyle(textElement).fontSize) * 0.95}px`;
+            if (viewportWidth < 768) {
+                // Для мобильных устройств
+                let fontSize = Math.min(12, 100 / text.length * 2.5);
+                textElement.style.fontSize = `${fontSize}vw`;
+                
+                while(textElement.offsetWidth > containerElement.offsetWidth * 0.9) {
+                    fontSize *= 0.95;
+                    textElement.style.fontSize = `${fontSize}vw`;
+                }
+            } else {
+                // Для десктопов
+                textElement.style.fontSize = '80px';
+                while(textElement.offsetWidth > containerElement.offsetWidth) {
+                    const currentSize = parseFloat(getComputedStyle(textElement).fontSize);
+                    textElement.style.fontSize = `${currentSize * 0.95}px`;
+                }
             }
         }
 
@@ -219,23 +241,26 @@
             particles.innerHTML = '';
             
             // Большой взрыв
-            document.querySelector('.blast').style.animation = 'blast 1.2s cubic-bezier(0.165, 0.84, 0.44, 1) forwards';
+            document.querySelector('.blast').style.animation = 'blast 1s cubic-bezier(0.165, 0.84, 0.44, 1) forwards';
             
             // Ударная волна
             const shockwave = document.createElement('div');
             shockwave.className = 'shockwave';
-            container.appendChild(shockwave);
-            setTimeout(() => shockwave.remove(), 1000);
+            document.querySelector('.container').appendChild(shockwave);
+            setTimeout(() => shockwave.remove(), 800);
+            
+            // Количество частиц в зависимости от устройства
+            const particleCount = window.innerWidth < 768 ? 30 : 50;
             
             // Частицы
-            for(let i = 0; i < 50; i++) {
+            for(let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'particle';
                 const angle = Math.random() * Math.PI * 2;
-                const speed = Math.random() * 300 + 150;
+                const speed = window.innerWidth < 768 ? Math.random() * 150 + 80 : Math.random() * 200 + 100;
                 particle.style.setProperty('--x', `${Math.cos(angle) * speed}px`);
                 particle.style.setProperty('--y', `${Math.sin(angle) * speed}px`);
-                particle.style.width = `${Math.random() * 15 + 5}px`;
+                particle.style.width = `${Math.random() * 8 + 4}px`;
                 particle.style.height = particle.style.width;
                 particle.style.animationDelay = `${Math.random() * 0.2}s`;
                 particles.appendChild(particle);
@@ -243,7 +268,7 @@
             
             setTimeout(() => {
                 particles.innerHTML = '';
-            }, 1200);
+            }, 1000);
         }
 
         // Запускаем взрыв после появления всех букв
@@ -251,15 +276,24 @@
             createExplosion();
         }, text.length * 150 + 600);
 
-        window.addEventListener('resize', adjustText);
-        document.addEventListener('DOMContentLoaded', adjustText);
+        // Инициализация и обработка ресайза
+        function init() {
+            adjustText();
+            window.addEventListener('resize', () => {
+                setTimeout(adjustText, 100);
+            });
+        }
 
-        // Интерактивное свечение
-        document.addEventListener('mousemove', (e) => {
-            const glow = document.querySelector('.glow');
-            glow.style.left = `${e.clientX - 100}px`;
-            glow.style.top = `${e.clientY - 100}px`;
-        });
+        // Интерактивное свечение для десктопов
+        if (window.matchMedia("(pointer: fine)").matches) {
+            document.addEventListener('mousemove', (e) => {
+                const glow = document.querySelector('.glow');
+                glow.style.left = `${e.clientX - 75}px`;
+                glow.style.top = `${e.clientY - 75}px`;
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
