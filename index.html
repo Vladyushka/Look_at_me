@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Смотри на страницу иди*т!</title>
+    <title>Смотри на страницу</title>
     <style>
         body {
             margin: 0;
@@ -12,8 +12,8 @@
             align-items: center;
             background: #000;
             overflow: hidden;
-            font-family: 'Arial Black', sans-serif;
-            touch-action: manipulation;
+            font-family: 'Arial', sans-serif;
+            touch-action: none;
         }
 
         .container {
@@ -28,23 +28,18 @@
             color: #ff0000;
             font-size: 10vw;
             text-transform: uppercase;
-            text-shadow: 0 0 30px #ff0000;
+            text-shadow: 0 0 15px #ff0000;
             white-space: nowrap;
             letter-spacing: -1px;
             position: relative;
             z-index: 3;
+            will-change: transform;
         }
 
         @media (min-width: 768px) {
             .text {
                 font-size: 6vw;
-                letter-spacing: -2px;
-            }
-        }
-
-        @media (min-width: 1200px) {
-            .text {
-                font-size: 80px;
+                text-shadow: 0 0 30px #ff0000;
             }
         }
 
@@ -53,24 +48,20 @@
             opacity: 0;
             transform: translateX(-100vw);
             animation: 
-                letterEntry 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards,
-                letterBounce 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) 0.6s forwards;
+                letterEntry 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.1) forwards,
+                letterBounce 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55) 0.5s forwards;
+            will-change: transform, opacity;
         }
 
         @keyframes letterEntry {
-            0% {
-                transform: translateX(-100vw);
-                opacity: 0;
-            }
-            100% {
+            to {
                 transform: translateX(0);
                 opacity: 1;
             }
         }
 
         @keyframes letterBounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
+            50% { transform: translateY(-12px); }
         }
 
         .overlay {
@@ -81,7 +72,7 @@
             height: 200%;
             background: radial-gradient(circle, 
                 rgba(255,0,0,0.1) 0%, 
-                rgba(0,0,0,1) 50%);
+                rgba(0,0,0,1) 60%);
             pointer-events: none;
             mix-blend-mode: multiply;
             z-index: 2;
@@ -89,31 +80,24 @@
 
         .blast {
             position: absolute;
-            width: 300%;
-            height: 600%;
+            width: 200%;
+            height: 400%;
             background: radial-gradient(circle, 
-                rgba(255,100,100,0.8) 0%, 
-                rgba(255,50,50,0.5) 40%, 
-                rgba(255,0,0,0) 80%);
-            animation: blast 1.2s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+                rgba(255,100,100,0.6) 0%, 
+                rgba(255,0,0,0) 70%);
+            animation: blast 1s ease-out forwards;
             pointer-events: none;
             z-index: 1;
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%) scale(0);
             opacity: 0;
+            will-change: transform, opacity;
         }
 
         @keyframes blast {
-            0% {
-                transform: translate(-50%, -50%) scale(0);
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.9;
-            }
-            100% {
-                transform: translate(-50%, -50%) scale(3);
+            to {
+                transform: translate(-50%, -50%) scale(2);
                 opacity: 0;
             }
         }
@@ -128,21 +112,17 @@
 
         .particle {
             position: absolute;
-            background: radial-gradient(circle, #ff5555 20%, rgba(255,0,0,0) 80%);
-            width: 8px;
-            height: 8px;
+            background: rgba(255,100,100,0.8);
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
-            animation: particleFly 1.2s ease-out forwards;
-            left: 50%;
-            top: 50%;
+            animation: particleFly 0.8s ease-out forwards;
+            transform: translateZ(0);
+            will-change: transform, opacity;
         }
 
         @keyframes particleFly {
-            0% {
-                transform: translate(-50%, -50%) scale(1);
-                opacity: 1;
-            }
-            100% {
+            to {
                 transform: translate(var(--x), var(--y)) scale(0);
                 opacity: 0;
             }
@@ -150,43 +130,19 @@
 
         .glow {
             position: fixed;
-            width: 150px;
-            height: 150px;
+            width: 120px;
+            height: 120px;
             background: radial-gradient(circle, 
-                rgba(255,0,0,0.4) 0%, 
+                rgba(255,0,0,0.3) 0%, 
                 rgba(0,0,0,0) 70%);
             animation: pulse 2s infinite;
             pointer-events: none;
             z-index: 0;
+            transform: translate(-50%, -50%);
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 0.6; transform: scale(1.1); }
-        }
-
-        .shockwave {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: radial-gradient(circle, 
-                rgba(255,255,255,0.8) 0%, 
-                rgba(255,100,100,0) 70%);
-            animation: shockwave 1s linear forwards;
-            z-index: 5;
-            pointer-events: none;
-        }
-
-        @keyframes shockwave {
-            0% {
-                transform: scale(0);
-                opacity: 1;
-            }
-            100% {
-                transform: scale(3);
-                opacity: 0;
-            }
+            50% { transform: scale(1.05); }
         }
 
         @media (max-width: 480px) {
@@ -194,27 +150,22 @@
                 font-size: 12vw;
                 white-space: normal;
                 line-height: 1.2;
+                text-shadow: 0 0 10px #ff0000;
             }
             
             .letter {
                 animation: 
-                    letterEntry 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards,
-                    letterBounceMobile 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) 0.6s forwards;
-            }
-            
-            @keyframes letterBounceMobile {
-                0%, 100% { transform: translateY(0); }
-                50% { transform: translateY(-10px); }
+                    letterEntry 0.4s ease-out forwards,
+                    letterBounce 0.3s ease 0.4s forwards;
             }
             
             .blast {
-                animation: blastMobile 1.2s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+                animation-duration: 0.8s;
             }
             
-            @keyframes blastMobile {
-                100% {
-                    transform: translate(-50%, -50%) scale(2);
-                }
+            .particle {
+                width: 5px;
+                height: 5px;
             }
         }
     </style>
@@ -233,76 +184,57 @@
         const container = document.querySelector('.text');
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
         
-        // Создаем буквы с анимацией
+        // Инициализация текста
         text.split('').forEach((letter, index) => {
             const span = document.createElement('span');
             span.className = 'letter';
             span.textContent = letter;
-            span.style.animationDelay = `${index * (isMobile ? 0.1 : 0.15)}s`;
+            span.style.animationDelay = `${index * (isMobile ? 0.08 : 0.12)}s`;
             container.appendChild(span);
         });
 
-        // Адаптивный размер текста
-        function adjustText() {
-            const textElement = document.querySelector('.text');
-            const container = document.querySelector('.container');
-            
-            if(isMobile) {
-                textElement.style.fontSize = '12vw';
-                return;
-            }
-            
-            while(textElement.offsetWidth > container.offsetWidth) {
-                textElement.style.fontSize = `${parseFloat(getComputedStyle(textElement).fontSize) * 0.95}px`;
-            }
-        }
-
-        // Создаем эффект взрыва с частицами
+        // Создание взрыва
         function createExplosion() {
             const particles = document.querySelector('.particles');
-            particles.innerHTML = '';
             
-            document.querySelector('.blast').style.animation = 'blast 1.2s forwards';
-            
+            // Шоквейв
             const shockwave = document.createElement('div');
             shockwave.className = 'shockwave';
             container.appendChild(shockwave);
-            setTimeout(() => shockwave.remove(), 1000);
-            
-            const particleCount = isMobile ? 30 : 50;
+            setTimeout(() => shockwave.remove(), 600);
+
+            // Частицы
+            const particleCount = isMobile ? 15 : 30;
             for(let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'particle';
                 const angle = Math.random() * Math.PI * 2;
-                const speed = Math.random() * (isMobile ? 200 : 300) + 100;
+                const speed = Math.random() * 200 + 100;
                 particle.style.setProperty('--x', `${Math.cos(angle) * speed}px`);
                 particle.style.setProperty('--y', `${Math.sin(angle) * speed}px`);
-                particle.style.width = `${Math.random() * (isMobile ? 10 : 15) + 5}px`;
-                particle.style.height = particle.style.width;
-                particle.style.animationDelay = `${Math.random() * 0.2}s`;
                 particles.appendChild(particle);
+                
+                setTimeout(() => particle.remove(), 800);
             }
-            
-            setTimeout(() => {
-                particles.innerHTML = '';
-            }, 1200);
         }
 
-        // Запускаем взрыв после появления всех букв
+        // Запуск анимации
         setTimeout(() => {
             createExplosion();
-        }, text.length * (isMobile ? 100 : 150) + 600);
+        }, text.length * (isMobile ? 80 : 120) + 500);
 
-        window.addEventListener('resize', adjustText);
-        document.addEventListener('DOMContentLoaded', adjustText);
-
-        // Интерактивное свечение
+        // Адаптивное свечение
+        let lastUpdate = 0;
+        const glow = document.querySelector('.glow');
+        
         function moveGlow(e) {
-            const glow = document.querySelector('.glow');
+            const now = Date.now();
+            if (now - lastUpdate < 33) return;
+            
             const x = e.clientX || e.touches[0].clientX;
             const y = e.clientY || e.touches[0].clientY;
-            glow.style.left = `${x - 75}px`;
-            glow.style.top = `${y - 75}px`;
+            glow.style.transform = `translate(${x - 60}px, ${y - 60}px)`;
+            lastUpdate = now;
         }
 
         document.addEventListener('mousemove', moveGlow);
